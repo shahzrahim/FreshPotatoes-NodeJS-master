@@ -43,7 +43,7 @@ Promise.resolve()
   });
 // ROUTES
 app.get('/films/:id/recommendations', getFilmRecommendations);
-app.get("*", (req, res) => {
+app.get('*', (req, res) => {
   res.status(404).json({
     message:'Key Missing'
   })
@@ -65,33 +65,31 @@ app.get("*", (req, res) => {
           sequelize.query(`SELECT name FROM genres WHERE genres.id == ${films[0].genre_id}`, { type: sequelize.QueryTypes.SELECT})
           .then(genre => {
             res.json({
-              recommendations: [
-                {
+              recommendations: [{
                   id: films[0].id,
                   title: films[0].title,
                   release_date: films[0].release_date,
                   genre: genre[0].name,
                   averageRating: null,
                   reviews: null
-                }
-              ],
+                }],
               meta: {
                 limit: 10,
                 offset: 1
               }
-            })
+            });
           })
         })
         .catch(err => {
           res.status(422).json({
             message: 'Key Missing'
           })
-        })
+        });
       })
       .catch(err => {
         res.status(422).json({
           message: 'Key Missing'
         })
-      })
+      });
   }
 module.exports = app;
