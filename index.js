@@ -8,7 +8,6 @@ const { PORT=3000, NODE_ENV='development', DB_PATH='./db/database.db' } = proces
 Promise.resolve()
   .then(() => app.listen(PORT, () => console.log(`App listening on port ${PORT}`)))
   .catch((err) => { if (NODE_ENV === 'development') console.error(err.stack); });
-  // const Sequelize = require('sequelize');
   const sequelize = new Sequelize('database', 'null', 'null', {
     host: 'localhost',
     dialect: 'sqlite',
@@ -22,20 +21,32 @@ Promise.resolve()
     storage: './db/database.db'
   });
   const Films = sequelize.define('films', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+    },
     title: {
       type: Sequelize.STRING
     },
     release_date: {
       type: Sequelize.STRING
     },
-    genre_id: {
+    genre: {
+      type: Sequelize.STRING
+    },
+    averageRating: {
+      type: Sequelize.INTEGER
+    },
+    reviews: {
       type: Sequelize.INTEGER
     }
   });
 // ROUTES
 app.get('/films/:id/recommendations', getFilmRecommendations);
 app.get("*", (req, res) => {
-  res.status(500).send("Incorrect path, try again.");
+  res.status(404).json({
+    message: 'Key Missing'
+    })
 });
 // ROUTE HANDLER
 
@@ -84,12 +95,15 @@ app.get("*", (req, res) => {
               })
             })
             .catch(err => {
-              res.status(500).send('Not Implemented');
+              res.status(404).json({
+                message: 'Key Missing'
+              })
             })
         })
         .catch(err => {
-          res.status(500).send('Not Implemented');
-      })
-    // })
+          res.status(404).json({
+            message: 'Key Missing'
+          })
+        })
   }
 module.exports = app;
