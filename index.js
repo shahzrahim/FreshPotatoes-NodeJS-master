@@ -90,7 +90,11 @@ app.get("*", (req, res) => {
                       averageRating: null,
                       reviews: null
                     }
-                  ]
+                  ],
+                  meta: {
+                    limit: 10,
+                    offset: 1
+                  }
                 })
               })
             })
